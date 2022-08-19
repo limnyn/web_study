@@ -5,25 +5,50 @@
 </body>
 <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-<script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
     const root =document.getElementById("root");
-    const h3 = React.createElement(
-        "h3", 
-        {
-            id:"title",
-            onMouseEnter:()=> console.log("mouse enter"),
-        }, 
-        "Hello I'm a span");
-    const btn = React.createElement(
-        "button", 
-        {
-            onClick:()=> console.log("im clicked"),
-            style:{
-                backgroundColor: "tomato",
-            }
-        },
-        "Click me");
-    const container = React.createElement("div",null,[h3,btn]);
-    ReactDOM.render(container, root);
+    function App(){
+       const [amount, setAmount] = React.useState(0);
+       const [inverted, setInverted] = React.useState(false);
+       const onChange = (event) =>{
+        setAmount(event.target.value);
+        };
+        const reset = ()=>   setAmount(0);
+        const onInvert = ()=> {
+            reset();
+            setInverted((current) => !current);
+        }
+        return(
+            <div>
+                <h1>Super Converter</h1>
+                <div><label htmlFor="minutes">Minutes</label>
+                    <input 
+                    value={inverted ? amount * 60 : amount} 
+                    id="minutes" 
+                    placeholder="Minutes" 
+                    type="number"
+                    onChange={onChange}
+                    disabled={inverted}
+
+                />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input
+                        value={inverted ? amount : Math.round(amount / 60)} 
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number"
+                        onChange={onChange}
+                        disabled={!inverted}
+                    />
+                </div>
+                <button onClick={reset}>Reset</button>
+                <button onClick={onInvert}>{inverted ? "Turn back" : "Invert"}</button>
+            </div>
+            );
+    }
+    ReactDOM.render(<App />,root);
 </script>
 </html>
